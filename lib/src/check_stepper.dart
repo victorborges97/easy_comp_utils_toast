@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: must_be_immutable, unused_element
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +113,7 @@ const double _kStepSize = 28.0;
 @immutable
 class CheckStep {
   dynamic error;
-  Future<CheckStepsErrorType> Function(dynamic error)? errorCallback;
+  Future<CheckStepErrorType> Function(dynamic error)? errorCallback;
   String errorCallbackText;
 
   /// Creates a step for a [CheckStepper].
@@ -125,8 +127,7 @@ class CheckStep {
     this.label,
     this.errorCallbackText = "Refresh",
     this.errorCallback,
-  })  : assert(title != null),
-        assert(state != null);
+  });
 
   /// The title of the step that typically describes it.
   final String title;
@@ -151,10 +152,10 @@ class CheckStep {
   /// By default, uses the `bodyLarge` theme.
   final Widget? label;
 
-  Future<CheckStepState> Function(Function(SetMessage setMessage) setMessage)?
+  Future<CheckStepState> Function(Function(StepMessage setMessage) setMessage)?
       checkStatus;
 
-  SetMessage? message;
+  StepMessage? message;
 }
 
 /// A material stepper widget that displays progress through a sequence of
@@ -186,20 +187,14 @@ class CheckStepper extends StatefulWidget {
   ///
   /// The [steps], [type], and [currentStep] arguments must not be null.
   const CheckStepper._({
-    super.key,
     required this.steps,
     this.physics,
     this.type = CheckStepperType.vertical,
-    this.onStepTapped,
-    this.onStepContinue,
-    this.onStepCancel,
-    this.controlsBuilder,
     this.elevation,
     this.margin,
     this.onSave,
     this.onTente,
-  })  : assert(steps != null),
-        assert(type != null);
+  });
 
   /// The steps of the stepper whose titles, subtitles, icons always get shown.
   ///
@@ -220,74 +215,6 @@ class CheckStepper extends StatefulWidget {
   /// underneath as opposed to the [CheckStepperType.vertical] case where it is
   /// displayed in-between.
   final CheckStepperType type;
-
-  /// The callback called when a step is tapped, with its index passed as
-  /// an argument.
-  final ValueChanged<int>? onStepTapped;
-
-  /// The callback called when the 'continue' button is tapped.
-  ///
-  /// If null, the 'continue' button will be disabled.
-  final VoidCallback? onStepContinue;
-
-  /// The callback called when the 'cancel' button is tapped.
-  ///
-  /// If null, the 'cancel' button will be disabled.
-  final VoidCallback? onStepCancel;
-
-  /// The callback for creating custom controls.
-  ///
-  /// If null, the default controls from the current theme will be used.
-  ///
-  /// This callback which takes in a context and a [CheckControlsDetails] object, which
-  /// contains step information and two functions: [onStepContinue] and [onStepCancel].
-  /// These can be used to control the stepper. For example, reading the
-  /// [CheckControlsDetails.currentStep] value within the callback can change the text
-  /// of the continue or cancel button depending on which step users are at.
-  ///
-  /// {@tool dartpad}
-  /// Creates a stepper control with custom buttons.
-  ///
-  /// ```dart
-  /// Widget build(BuildContext context) {
-  ///   return Stepper(
-  ///     controlsBuilder:
-  ///       (BuildContext context, ControlsDetails details) {
-  ///          return Row(
-  ///            children: <Widget>[
-  ///              TextButton(
-  ///                onPressed: details.onStepContinue,
-  ///                child: Text('Continue to Step ${details.stepIndex + 1}'),
-  ///              ),
-  ///              TextButton(
-  ///                onPressed: details.onStepCancel,
-  ///                child: Text('Back to Step ${details.stepIndex - 1}'),
-  ///              ),
-  ///            ],
-  ///          );
-  ///       },
-  ///     steps: const <Step>[
-  ///       Step(
-  ///         title: Text('A'),
-  ///         content: SizedBox(
-  ///           width: 100.0,
-  ///           height: 100.0,
-  ///         ),
-  ///       ),
-  ///       Step(
-  ///         title: Text('B'),
-  ///         content: SizedBox(
-  ///           width: 100.0,
-  ///           height: 100.0,
-  ///         ),
-  ///       ),
-  ///     ],
-  ///   );
-  /// }
-  /// ```
-  /// ** See code in examples/api/lib/material/stepper/stepper.controls_builder.0.dart **
-  /// {@end-tool}
-  final CheckControlsWidgetBuilder? controlsBuilder;
 
   /// The elevation of this stepper's [Material] when [type] is [CheckStepperType.horizontal].
   final double? elevation;
@@ -350,21 +277,14 @@ class _CheckStepperState extends State<CheckStepper>
 
   Future startCheck() async {
     for (var i = 0; i < widget.steps.length; i++) {
-      print("===============");
-      print(
-          "i($i) < widget.steps.length(${widget.steps.length}) = ${i < widget.steps.length}");
       var s = widget.steps[i];
       int nextIndex = i + 1;
-      print("isRunnig: $i");
       currentStep = i;
       widget.steps[i].state = CheckStepState.loading;
       setState(() {});
 
       if (s.isActive) {
-        print("isActive: $i");
-
         if (!s.alreadyChecked && widget.steps[i].checkStatus != null) {
-          print("alreadyChecked: $i");
           late CheckStepState value;
 
           try {
@@ -405,12 +325,10 @@ class _CheckStepperState extends State<CheckStepper>
 
         //Final
         if (i < widget.steps.length && ((nextIndex) < widget.steps.length)) {
-          print("isRunnig.last: ${_isLast(nextIndex)} => $nextIndex");
           widget.steps[nextIndex].isActive = true;
         }
         setState(() {});
       } else {
-        print("isNotActive: $i");
         //break;
       }
     }
@@ -484,18 +402,6 @@ class _CheckStepperState extends State<CheckStepper>
   }
 
   Widget _buildVerticalContent(int stepIndex) {
-    if (widget.controlsBuilder != null) {
-      return widget.controlsBuilder!(
-        context,
-        CheckControlsDetails(
-          currentStep: currentStep,
-          onStepContinue: widget.onStepContinue,
-          onStepCancel: widget.onStepCancel,
-          stepIndex: stepIndex,
-        ),
-      );
-    }
-
     return Container(
       margin: const EdgeInsets.only(top: 0.0),
       child: ConstrainedBox(
@@ -504,7 +410,7 @@ class _CheckStepperState extends State<CheckStepper>
           // The Material spec no longer includes a Stepper widget. The continue
           // and cancel button styles have been configured to match the original
           // version of this widget.
-          children: <Widget>[
+          children: const <Widget>[
             // TextButton(
             //   onPressed: widget.onStepContinue,
             //   style: ButtonStyle(
@@ -641,7 +547,7 @@ class _CheckStepperState extends State<CheckStepper>
 
                       final type = await widget.steps[index]
                           .errorCallback!(widget.steps[index].error);
-                      if (type == CheckStepsErrorType.close) {
+                      if (type == CheckStepErrorType.close) {
                         navigator.pop();
                       } else {
                         widget.steps[index].alreadyChecked = false;
@@ -838,9 +744,7 @@ class _CheckStepperState extends State<CheckStepper>
     final List<Widget> children = <Widget>[
       for (int i = 0; i < widget.steps.length; i += 1) ...<Widget>[
         InkResponse(
-          onTap: () {
-            widget.onStepTapped?.call(i);
-          },
+          onTap: () {},
           child: Row(
             children: <Widget>[
               SizedBox(
@@ -961,7 +865,7 @@ class _CheckStepperState extends State<CheckStepper>
 }
 
 class SetMessageWidget extends StatelessWidget {
-  final SetMessage item;
+  final StepMessage item;
   final CheckStepState status;
   const SetMessageWidget({super.key, required this.item, required this.status});
   @override
@@ -1001,27 +905,27 @@ class SetMessageWidget extends StatelessWidget {
   }
 }
 
-class SetMessage {
+class StepMessage {
   String message;
   VoidCallback? onTap;
   String? textOnTap = "Ok";
   double heightLine = 20;
-  SetMessage._({required this.message});
+  StepMessage._({required this.message});
 
-  SetMessage.message({required this.message, this.heightLine = 20});
-  SetMessage.messageWithAction(
+  StepMessage.message({required this.message, this.heightLine = 20});
+  StepMessage.messageWithAction(
       {required this.message,
       required this.onTap,
       required this.textOnTap,
       this.heightLine = 20});
 }
 
-enum CheckStepsErrorType {
+enum CheckStepErrorType {
   close,
   refreshAction,
 }
 
-extension CheckStatusTypeExtension on CheckStepState {
+extension CheckStepStateExtension on CheckStepState {
   double heightLine(String? message) {
     switch (this) {
       case CheckStepState.error:

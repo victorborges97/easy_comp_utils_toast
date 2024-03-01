@@ -37,7 +37,7 @@ void main() {
                       checkStatus: (setMessage) async {
                         await Future.delayed(const Duration(seconds: 1));
                         setMessage(
-                          SetMessage.message(
+                          StepMessage.message(
                               message:
                                   "HOUVE ERRO AO REALIZAR A VENDA\n\nErro: Data de Validade do Certificado jÂ. expirou: 20/01/2024\nNumero Série: 601\nNumero Nota: 199"),
                         );

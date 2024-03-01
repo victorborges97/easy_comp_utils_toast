@@ -9,7 +9,7 @@
 
 ```yaml
 dependencies:
-    easy_comp_utils_dialog: ^0.0.12
+    easy_comp_utils_dialog: ^0.0.1+1
 ```
 
 2. Importe o pacote para usar no seu App Flutter

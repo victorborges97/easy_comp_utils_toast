@@ -1,6 +1,6 @@
 name: easy_comp_utils_dialog
 description: Componentes Feitos mais para uso pessoal.
-version: 0.0.1+1
+version: 0.0.2
 homepage: https://github.com/victorborges97/
 
 # flutter pub publish --dry-run
@@ -13,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_animator: ^3.2.2
+  flutter_styled_toast: 2.1.3
 
 dev_dependencies:
   flutter_test:

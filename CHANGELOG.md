@@ -1,7 +1,7 @@
 ## 0.0.1
 
--    Criando easy_comp_utils_dialog
+-    Criando easy_comp_utils_toast
 
 ## 0.0.2
 
--    Criando novo componente de loading step;
+-    Atualizando documentação

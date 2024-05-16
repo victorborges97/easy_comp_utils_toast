@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "easy_comp_utils_dialog",
+            "name": "easy_comp_utils_toast",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "easy_comp_utils_dialog (profile mode)",
+            "name": "easy_comp_utils_toast (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "easy_comp_utils_dialog (release mode)",
+            "name": "easy_comp_utils_toast (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

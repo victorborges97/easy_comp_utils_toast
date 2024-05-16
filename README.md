@@ -1,7 +1,6 @@
 ## Componentes
 
-1. CheckStepper
-2. DialogHelper
+1. EasyCompUtilsToast
 
 ## Instalação
 
@@ -9,22 +8,41 @@
 
 ```yaml
 dependencies:
-    easy_comp_utils_dialog: ^0.0.1+1
+    easy_comp_utils_toast: ^0.0.2
 ```
 
-2. Importe o pacote para usar no seu App Flutter
+2. Inicialize a lib passando o [NavigatorState]
 
 ```dart
-import 'package:easy_comp_utils_dialog/easy_comp_utils_dialog.dart';
+import 'package:easy_comp_utils_toast/easy_comp_utils_toast.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  final navigatorKeyGlobal = GlobalKey<NavigatorState>();
+  @override
+  Widget build(BuildContext context) {
+    EasyCompUtilsToast.init(navigatorKeyGlobal);
+    return MaterialApp(
+        title: 'MyApp',
+        navigatorKey: navigatorKeyGlobal,
+    );
+  }
+}
+```
+
+3. Importe o pacote para usar no seu App Flutter
+
+```dart
+import 'package:easy_comp_utils_toast/easy_comp_utils_toast.dart';
 ```
 
 ## Modo de usar
 
--   Usando componente CheckStepper em um Dialog.
+-   Usando componente EasyCompUtilsToast.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:easy_comp_utils_dialog/easy_comp_utils_dialog.dart';
+import 'package:easy_comp_utils_toast/easy_comp_utils_toast.dart';
 
 class EasyCompTeste extends StatelessWidget {
   const EasyCompTeste({super.key});
@@ -35,45 +53,17 @@ class EasyCompTeste extends StatelessWidget {
       child: Center(
         child: TextButton(
             child: const Text("Teste"),
-            onPressed: () {
-                CheckStepper.show(
-                    context: context,
-                    checkItens: [
-                        CheckStep(
-                            title: "Validando",
-                            checkStatus: (setMessage) async {
-                            await Future.delayed(const Duration(seconds: 1));
-                            // throw "Error teste";
-                            return CheckStepState.complete;
-                            },
-                        ),
-                        CheckStep(
-                            title: "Emitindo Nota",
-                            checkStatus: (setMessage) async {
-                            await Future.delayed(const Duration(seconds: 1));
-                            setMessage(
-                                SetMessage.message(
-                                    message:
-                                        "HOUVE ERRO AO REALIZAR A VENDA\n\nErro: Data de Validade do Certificado jÂ. expirou: 20/01/2024\nNumero Série: 601\nNumero Nota: 199"),
-                            );
-                            return CheckStepState.warning;
-                            },
-                        ),
-                        CheckStep(
-                            title: "Finalizando venda",
-                            checkStatus: (setMessage) async {
-                            await Future.delayed(const Duration(seconds: 1));
-                            return CheckStepState.complete;
-                            },
-                        ),
-                        CheckStep(
-                            title: "Gerando comprovante",
-                            checkStatus: (setMessage) async {
-                            await Future.delayed(const Duration(seconds: 1));
-                            return CheckStepState.complete;
-                            },
-                        ),
-                    ],
+            onPressed: () async {
+                EasyCompUtilsToast.success(
+                    message: "success !",
+                );
+                await Future.delayed(const Duration(seconds: 2));
+                EasyCompUtilsToast.info(
+                    message: "info !",
+                );
+                await Future.delayed(const Duration(seconds: 2));
+                EasyCompUtilsToast.error(
+                    message: "error !",
                 );
             },
         ),
